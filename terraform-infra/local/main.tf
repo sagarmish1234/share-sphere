@@ -28,7 +28,9 @@ resource "docker_volume" "postgres_data" {
 resource "docker_container" "postgres_container" {
   name  = "postgres-local"
   image = docker_image.postgres.image_id
-
+  networks_advanced {
+    name = docker_network.share-shere-local.name
+  }
   ports {
     internal = 5432
     external = 5432

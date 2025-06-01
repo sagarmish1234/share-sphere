@@ -21,7 +21,9 @@ resource "docker_container" "minio_container" {
     internal = 9001
     external = 9001
   }
-
+  networks_advanced {
+    name = docker_network.share-shere-local.name
+  }
   env = [
     "MINIO_ROOT_USER=minioadmin",
     "MINIO_ROOT_PASSWORD=miniopassword"
