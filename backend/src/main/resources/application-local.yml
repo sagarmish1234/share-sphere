@@ -3,3 +3,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/sharesphere
     username: admin
     password: admin
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${clientId}
+            client-secret: ${clientSecret}
