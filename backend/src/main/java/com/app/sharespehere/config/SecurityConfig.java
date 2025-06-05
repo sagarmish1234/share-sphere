@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -16,7 +17,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(customizer -> customizer.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(getPublicUrls()).permitAll()
                         .anyRequest().authenticated()
@@ -26,6 +27,7 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
+                        .deleteCookies("JSESSIONID")
                         .logoutSuccessUrl("/")
                         .permitAll()
                 );
@@ -35,13 +37,11 @@ public class SecurityConfig {
 
     public String[] getPublicUrls() {
         LinkedList<String> publicUrls = new LinkedList<>();
-        publicUrls.add("/index.html");
+        publicUrls.add("/**.html");
         publicUrls.add("/ui/login");
-        publicUrls.add("/api/v1/login");
         publicUrls.add("/assets/**");
         publicUrls.add("/**.svg");
         publicUrls.add("/logout");
-
         publicUrls.add( "/error");
         publicUrls.add("/");
 
