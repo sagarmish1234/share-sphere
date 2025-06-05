@@ -16,14 +16,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(getPublicUrls()).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/index.html")
+                        .loginPage("/ui/login")
                 )
                 .logout(logout -> logout
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .permitAll()
                 );
@@ -38,6 +40,7 @@ public class SecurityConfig {
         publicUrls.add("/api/v1/login");
         publicUrls.add("/assets/**");
         publicUrls.add("/**.svg");
+        publicUrls.add("/logout");
 
         publicUrls.add( "/error");
         publicUrls.add("/");
