@@ -17,7 +17,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/index.html", "/error").permitAll()
+                        .requestMatchers(getPublicUrls()).permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2 -> oauth2
@@ -36,6 +36,11 @@ public class SecurityConfig {
         publicUrls.add("/index.html");
         publicUrls.add("/ui/login");
         publicUrls.add("/api/v1/login");
+        publicUrls.add("/assets/**");
+        publicUrls.add("/**.svg");
+
+        publicUrls.add( "/error");
+        publicUrls.add("/");
 
         return publicUrls.toArray(String[]::new);
     }
