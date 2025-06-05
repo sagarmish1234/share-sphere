@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 
-    @GetMapping("status")
-    public String getLoginStatus(@AuthenticationPrincipal OAuth2User user){
+    @GetMapping("/status")
+    public String loginStatus(@AuthenticationPrincipal OAuth2User user){
         return "Success "+user.getAttributes().get("name");
     }
 
