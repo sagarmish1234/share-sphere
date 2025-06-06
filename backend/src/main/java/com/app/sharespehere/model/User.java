@@ -14,7 +14,7 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @Setter
 @Builder
-public class User extends Auditable{
+public class User{
 
     @Id
     Long id;
