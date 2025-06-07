@@ -1,0 +1,32 @@
+meta {
+  name: Create Resource
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/v1/resource
+  body: multipartForm
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "HC verma",
+    "description": "This is just a book written by HC verma",
+    "quanity": 0,
+    "categoryName": "books"
+  }
+}
+
+body:multipart-form {
+  file: @file(/home/sagar/Downloads/chalan.pdf)
+  body: '''
+    {
+      "name": "HC verma",
+      "description": "This is just a book written by HC verma",
+      "quantity": 10,
+      "categoryName": "books"
+    }
+  '''
+}
