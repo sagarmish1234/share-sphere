@@ -19,15 +19,16 @@ public class SecurityConfig {
 
     @Autowired
     AuthenticationSuccessHandler successHandler;
-
-    @Autowired
-    AddressCheckFilter addressCheckFilter;
+//
+//    @Autowired
+//    AddressCheckFilter addressCheckFilter;
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
 //                .addFilterAfter(addressCheckFilter, SecurityContextPersistenceFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(getPublicUrls()).permitAll()
@@ -55,10 +56,14 @@ public class SecurityConfig {
         LinkedList<String> publicUrls = new LinkedList<>();
         publicUrls.add("/**.html");
         publicUrls.add("/assets/**");
+        publicUrls.add("/ui/login");
         publicUrls.add("/**.svg");
         publicUrls.add("/logout");
         publicUrls.add( "/error");
         publicUrls.add("/");
+        publicUrls.add("/swagger-ui/**");
+        publicUrls.add("/v3/api-docs/**");
+        publicUrls.add("/login/oauth2/code/google");
 
         return publicUrls.toArray(String[]::new);
     }

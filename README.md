@@ -139,7 +139,7 @@ cd sharesphere
 ## API Documentation
 - **Swagger UI**: Access at `http://localhost:8080/swagger-ui/` (or ECS endpoint after deployment).
 - **Key Endpoints**:
-  - `POST /api/auth/register`: Register a new user.
+  - `POST /api/auth/register`: Register a new account.
   - `POST /api/auth/login`: Authenticate and receive JWT.
   - `POST /api/resources`: Create a resource (Owner only).
   - `GET /api/search?query=drill&category=Tools`: Search resources.

@@ -1,7 +1,7 @@
 package com.app.sharespehere.filter;
 
-import com.app.sharespehere.model.User;
-import com.app.sharespehere.service.UserService;
+import com.app.sharespehere.model.Account;
+import com.app.sharespehere.service.AccountService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,19 +10,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Optional;
 
-@Component
+//@Component
 @Slf4j
 public class AddressCheckFilter extends OncePerRequestFilter {
 
-    UserService userService;
+    AccountService accountService;
 
 
     @Override
@@ -44,7 +42,7 @@ public class AddressCheckFilter extends OncePerRequestFilter {
         }
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
             String email = oauthToken.getPrincipal().getAttribute("email");
-            Optional<User> user = userService.getUser(email);
+            Optional<Account> user = accountService.getUser(email);
 
             if (user.isPresent() && ObjectUtils.isEmpty(user.get().getAddress())) {
                 response.sendRedirect("/address");

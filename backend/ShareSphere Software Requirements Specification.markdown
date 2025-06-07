@@ -13,12 +13,12 @@ ShareSphere enables users to:
 - Request to borrow resources, with owners approving or rejecting requests.
 - Optionally, upload resource images and receive email notifications for request updates.
 
-The system will be a single-service web application with RESTful APIs, a PostgreSQL database, and deployment on AWS ECS using Docker and Fargate. It will include a minimal React frontend for user interaction and leverage AWS services like RDS, S3, and SES.
+The system will be a single-service web application with RESTful APIs, a PostgreSQL database, and deployment on AWS ECS using Docker and Fargate. It will include a minimal React frontend for account interaction and leverage AWS services like RDS, S3, and SES.
 
 ### 1.3 Definitions, Acronyms, and Abbreviations
 - **User**: An individual who registers to browse, list, or borrow resources.
-- **Owner**: A user who lists a resource for sharing.
-- **Borrower**: A user who requests to borrow a resource.
+- **Owner**: A account who lists a resource for sharing.
+- **Borrower**: A account who requests to borrow a resource.
 - **Resource**: An item (e.g., tool, book) listed for sharing.
 - **Request**: A borrower’s request to borrow a resource, with statuses (pending, approved, rejected, returned).
 - **Spring Boot**: Java framework for building REST APIs.
@@ -55,16 +55,16 @@ The system will be a single-service web application with RESTful APIs, a Postgre
 ### 3.1 User Authentication
 **Description**: Users can register, log in, and log out securely. Role-based access distinguishes between owners and borrowers.
 - **Input**: Email, password, and optional profile details (e.g., name, location).
-- **Output**: JWT token for authenticated sessions, user profile data.
+- **Output**: JWT token for authenticated sessions, account profile data.
 - **Functional Requirements**:
   - Register: Users provide email, password, and location (city/zip code).
   - Login: Users authenticate with email and password to receive a JWT.
   - Logout: Invalidate session/token.
   - Role-Based Access: Owners can manage their resources; borrowers can request resources.
 - **Endpoints**:
-  - `POST /api/auth/register`: Create a new user.
+  - `POST /api/auth/register`: Create a new account.
   - `POST /api/auth/login`: Authenticate and return JWT.
-  - `GET /api/auth/profile`: Retrieve user profile (authenticated).
+  - `GET /api/auth/profile`: Retrieve account profile (authenticated).
 
 ### 3.2 Resource Management
 **Description**: Users (owners) can create, update, delete, and list their resources for sharing.
@@ -107,7 +107,7 @@ The system will be a single-service web application with RESTful APIs, a Postgre
   - `PUT /api/requests/{id}/approve`: Approve a request (owner only).
   - `PUT /api/requests/{id}/reject`: Reject a request (owner only).
   - `PUT /api/requests/{id}/return`: Mark as returned (owner only).
-  - `GET /api/requests/mine`: List user’s requests (authenticated).
+  - `GET /api/requests/mine`: List account’s requests (authenticated).
 
 ### 3.5 Image Upload (Optional)
 **Description**: Owners can upload images for resources, stored in AWS S3.
@@ -231,7 +231,7 @@ The system will be a single-service web application with RESTful APIs, a Postgre
 - **Postman Collection**: For testing all API endpoints.
 
 ### 7.3 Legal Requirements
-- Ensure compliance with data protection laws (e.g., GDPR for user data).
+- Ensure compliance with data protection laws (e.g., GDPR for account data).
 - Use AWS services within Free Tier limits to avoid costs.
 
 ## 8. Project Milestones

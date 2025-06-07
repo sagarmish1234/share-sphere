@@ -3,6 +3,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/sharesphere
     username: admin
     password: admin
+  jpa:
+    hibernate:
+      ddl-auto: update
+
 
 
   security:
@@ -12,3 +16,11 @@ spring:
           google:
             client-id: ${clientId}
             client-secret: ${clientSecret}
+
+
+aws:
+  access-key: minioadmin
+  secret-key: miniopassword
+  region: ap-south-1
+  url: http://localhost:9000
+
