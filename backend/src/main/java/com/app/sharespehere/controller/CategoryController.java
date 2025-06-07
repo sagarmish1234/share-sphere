@@ -16,13 +16,13 @@ public class CategoryController {
     CategoryService categoryService;
 
 
-    @PostMapping("/category")
+    @PostMapping("/categories")
     public void createCategory(@RequestParam String name) {
         categoryService.saveCategory(name);
     }
 
-    @GetMapping("/category")
-    public Category getCategory(@RequestParam String name){
+    @GetMapping("/categories/{name}")
+    public Category getCategory(@PathVariable String name){
         return categoryService.getCategoryByName(name);
     }
 

@@ -19,16 +19,29 @@ public class ResourceController {
     ResourceService resourceService;
 
 
-    @PostMapping("/resource")
+    @PostMapping("/resources")
     public void createResource(@RequestParam MultipartFile file, @RequestParam ResourceDto body, @AuthenticationPrincipal OAuth2User user) throws IOException {
 
         resourceService.createResource(body, file, user);
 
     }
 
-    @GetMapping("/resource")
-    public ResourceDto fetchResource(@RequestParam Long id) {
+    @GetMapping("/resources/{id}")
+    public ResourceDto fetchResource(@PathVariable Long id) {
         return resourceService.getResource(id);
     }
+
+    @PutMapping("/resources/{id}")
+    public void updateResource(@RequestParam MultipartFile file, @RequestParam ResourceDto body, @AuthenticationPrincipal OAuth2User user, @PathVariable Long id) throws IOException {
+
+        resourceService.updateResource(body, file, user, id);
+
+    }
+
+    @DeleteMapping("/resources/{id}")
+    public void deleteResource(@PathVariable Long id, @AuthenticationPrincipal OAuth2User user) {
+        resourceService.deleteResource(id, user);
+    }
+
 
 }

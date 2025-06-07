@@ -1,7 +1,7 @@
 package com.app.sharespehere.service;
 
 import com.app.sharespehere.dto.ResourceDto;
-import com.app.sharespehere.exception.ResourceNotFoundException;
+import com.app.sharespehere.exception.*;
 import com.app.sharespehere.model.Resource;
 import com.app.sharespehere.repository.ResourceRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class ResourceService {
         resourceRepository.save(resource);
     }
 
-    public void createResource(ResourceDto resourceDto, MultipartFile imageFile, OAuth2User principal) throws IOException {
+    public void createResource(ResourceDto resourceDto, MultipartFile imageFile, OAuth2User principal) {
         String email = principal.getAttribute("email");
         Resource resource = Resource.builder()
                 .name(resourceDto.name())
@@ -61,14 +61,19 @@ public class ResourceService {
         this.saveResource(resource);
     }
 
-    public String uploadImage(MultipartFile imageFile,String email) throws IOException {
+    public String uploadImage(MultipartFile imageFile, String email) {
         String s3ObjectKey = email + "/" + System.currentTimeMillis() + "-" + imageFile.getOriginalFilename();
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(s3ObjectKey)
                 .build();
-        PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(
-                imageFile.getInputStream(), imageFile.getSize()));
+        PutObjectResponse putObjectResponse;
+        try {
+            putObjectResponse = s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(
+                    imageFile.getInputStream(), imageFile.getSize()));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         log.info("Image upload response {}", putObjectResponse);
         return s3ObjectKey;
     }
@@ -92,10 +97,39 @@ public class ResourceService {
         log.info("Bucket name {}", bucket);
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
                 .signatureDuration(Duration.ofMinutes(60)) // URL valid for 60 minutes
-                .getObjectRequest(builder -> builder.bucket(bucket).key(bucket+"/"+s3ObjectKey))
+                .getObjectRequest(builder -> builder.bucket(bucket).key(bucket + "/" + s3ObjectKey))
                 .build();
         return s3Presigner.presignGetObject(presignRequest).url().toString();
 
+    }
+
+
+    public void updateResource(ResourceDto res, MultipartFile imageFile, OAuth2User principal, Long resourceId) {
+        Resource resource = this.getResourceById(resourceId);
+        String email = principal.getAttribute("email");
+        if (!resource.getAccount().getEmail().equals(email))
+            throw new UpdateDeniedException();
+        resource.setQuantity(res.quantity());
+        resource.setName(res.name());
+        resource.setDescription(res.description());
+        resource.setImage(this.uploadImage(imageFile, email));
+        resource.setAvailable(res.quantity() > 0);
+        this.saveResource(resource);
+    }
+
+    public void deleteResource(Long resourceId, OAuth2User principal) {
+        Resource resource = null;
+        try {
+            resource = this.getResourceById(resourceId);
+
+        } catch (NotFoundException e) {
+            log.info("Resource with id {}", resourceId);
+            return;
+        }
+        String email = principal.getAttribute("email");
+        if (!resource.getAccount().getEmail().equals(email))
+            throw new DeleteDeniedException();
+        resourceRepository.deleteById(resourceId);
     }
 
 
