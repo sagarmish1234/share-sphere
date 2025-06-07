@@ -22,8 +22,13 @@ public class ResourceController {
     @PostMapping("/resource")
     public void createResource(@RequestParam MultipartFile file, @RequestParam ResourceDto body, @AuthenticationPrincipal OAuth2User user) throws IOException {
 
-        resourceService.createResource(body,file,user);
+        resourceService.createResource(body, file, user);
 
+    }
+
+    @GetMapping("/resource")
+    public ResourceDto fetchResource(@RequestParam Long id) {
+        return resourceService.getResource(id);
     }
 
 }

@@ -1,13 +1,17 @@
 meta {
-  name: Create Resource
+  name: get Resource
   type: http
-  seq: 4
+  seq: 5
 }
 
-post {
-  url: http://localhost:8080/api/v1/resource
-  body: multipartForm
+get {
+  url: http://localhost:8080/api/v1/resource?id=202
+  body: json
   auth: inherit
+}
+
+params:query {
+  id: 202
 }
 
 body:json {
@@ -20,7 +24,7 @@ body:json {
 }
 
 body:multipart-form {
-  file: @file(/home/sagar/Downloads/santanu_passport.jpeg)
+  file: @file(/home/sagar/Downloads/chalan.pdf)
   body: '''
     {
       "name": "HC verma",

@@ -1,6 +1,7 @@
 package com.app.sharespehere.service;
 
 import com.app.sharespehere.dto.ResourceDto;
+import com.app.sharespehere.exception.ResourceNotFoundException;
 import com.app.sharespehere.model.Resource;
 import com.app.sharespehere.repository.ResourceRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +14,11 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 
 import java.io.IOException;
+import java.time.Duration;
 
 @Service
 @Slf4j
@@ -32,6 +36,9 @@ public class ResourceService {
 
     @Autowired
     private S3Client s3Client;
+
+    @Autowired
+    private S3Presigner s3Presigner;
 
     @Value("${aws.bucket}")
     private String bucket;
@@ -64,6 +71,31 @@ public class ResourceService {
                 imageFile.getInputStream(), imageFile.getSize()));
         log.info("Image upload response {}", putObjectResponse);
         return s3ObjectKey;
+    }
+
+    public Resource getResourceById(Long resourceId) {
+        return resourceRepository.findById(resourceId).orElseThrow(() -> new ResourceNotFoundException(resourceId.toString()));
+    }
+
+    public ResourceDto getResource(Long resourceId) {
+        Resource resource = this.getResourceById(resourceId);
+        return ResourceDto.builder()
+                .name(resource.getName())
+                .description(resource.getDescription())
+                .categoryName(resource.getCategory().getName())
+                .imageUrl(this.getImageUrl(resource.getImage()))
+                .quantity(resource.getQuantity())
+                .build();
+    }
+
+    public String getImageUrl(String s3ObjectKey) {
+        log.info("Bucket name {}", bucket);
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMinutes(60)) // URL valid for 60 minutes
+                .getObjectRequest(builder -> builder.bucket(bucket).key(bucket+"/"+s3ObjectKey))
+                .build();
+        return s3Presigner.presignGetObject(presignRequest).url().toString();
+
     }
 
 
