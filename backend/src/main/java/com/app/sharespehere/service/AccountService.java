@@ -19,7 +19,7 @@ public class AccountService {
     @Autowired
     AccountRepository accountRepository;
 
-    public void saveUser(Account account) {
+    public void saveAccount(Account account) {
         accountRepository.save(account);
     }
 
@@ -27,7 +27,7 @@ public class AccountService {
         return accountRepository.existsByEmail(userEmail);
     }
 
-    public void saveUser(AccountDto accountDto) {
+    public void saveAccount(AccountDto accountDto) {
         Account account = Account.builder()
                 .email(accountDto.email())
                 .name(accountDto.name())
@@ -36,17 +36,17 @@ public class AccountService {
                 .address(accountDto.address())
                 .phone(accountDto.phone())
                 .build();
-        this.saveUser(account);
+        this.saveAccount(account);
     }
 
-    public void saveUser(OAuth2User principal) {
+    public void saveAccount(OAuth2User principal) {
         String email = principal.getAttribute("email");
         String name = principal.getAttribute("name");
         Account account = Account.builder()
                 .email(email)
                 .name(name)
                 .build();
-        this.saveUser(account);
+        this.saveAccount(account);
         log.info("User saved");
 
     }
@@ -57,7 +57,7 @@ public class AccountService {
         account.setState(account.getAddress());
         account.setAddress(accountDto.address());
         account.setPhone(accountDto.phone());
-        this.saveUser(account);
+        this.saveAccount(account);
     }
 
     public Optional<Account> getUser(String email) {
@@ -72,7 +72,7 @@ public class AccountService {
         account.setCity(addressAndPhoneDto.city());
         account.setState(addressAndPhoneDto.address());
         account.setPhone(addressAndPhoneDto.phone());
-        this.saveUser(account);
+        this.saveAccount(account);
     }
 
     public AccountDto getProfile(OAuth2User userPrincipal){

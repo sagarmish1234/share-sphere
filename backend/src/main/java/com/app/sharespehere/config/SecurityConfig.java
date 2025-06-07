@@ -63,7 +63,6 @@ public class SecurityConfig {
         publicUrls.add("/");
         publicUrls.add("/swagger-ui/**");
         publicUrls.add("/v3/api-docs/**");
-        publicUrls.add("/login/oauth2/code/google");
 
         return publicUrls.toArray(String[]::new);
     }

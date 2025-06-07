@@ -25,7 +25,7 @@ public class Oauth2SuccessHandler extends SavedRequestAwareAuthenticationSuccess
             OAuth2User principal = oAuth2Token.getPrincipal();
             String email = principal.getAttribute("email");
             if(!accountService.userExists(email)){
-                accountService.saveUser(principal);
+                accountService.saveAccount(principal);
             }
 
         }
