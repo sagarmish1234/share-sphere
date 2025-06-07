@@ -42,9 +42,9 @@ public class AddressCheckFilter extends OncePerRequestFilter {
         }
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
             String email = oauthToken.getPrincipal().getAttribute("email");
-            Optional<Account> user = accountService.getUser(email);
+            Account user = accountService.getUser(email);
 
-            if (user.isPresent() && ObjectUtils.isEmpty(user.get().getAddress())) {
+            if (ObjectUtils.isEmpty(user.getAddress())) {
                 response.sendRedirect("/address");
                 return;
             }

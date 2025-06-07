@@ -2,12 +2,14 @@ package com.app.sharespehere.model;
 
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Resource extends Auditable{
 
     @Id
@@ -21,7 +23,7 @@ public class Resource extends Auditable{
 
     String description;
 
-    String quantity;
+    Integer quantity;
 
     @ManyToOne
     Category category;

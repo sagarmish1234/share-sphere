@@ -1,4 +1,4 @@
-package com.app.sharespehere.handlers;
+package com.app.sharespehere.handler;
 
 import com.app.sharespehere.service.AccountService;
 import jakarta.servlet.ServletException;

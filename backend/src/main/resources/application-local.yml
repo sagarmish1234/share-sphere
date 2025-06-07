@@ -23,4 +23,5 @@ aws:
   secret-key: miniopassword
   region: ap-south-1
   url: http://localhost:9000
+  bucket: share-sphere
 

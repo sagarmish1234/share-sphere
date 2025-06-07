@@ -17,7 +17,7 @@ import java.util.Optional;
 public class AccountService {
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     public void saveAccount(Account account) {
         accountRepository.save(account);
@@ -52,7 +52,7 @@ public class AccountService {
     }
 
     public void updateUser(AccountDto accountDto) {
-        Account account = this.getUser(accountDto.email()).orElseThrow(() -> new UsernameNotFoundException(String.format("Specified user not found %s", accountDto.email())));
+        Account account = this.getUser(accountDto.email());
         account.setCity(accountDto.city());
         account.setState(account.getAddress());
         account.setAddress(accountDto.address());
@@ -60,14 +60,14 @@ public class AccountService {
         this.saveAccount(account);
     }
 
-    public Optional<Account> getUser(String email) {
-        return accountRepository.findByEmail(email);
+    public Account getUser(String email) {
+        return accountRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException(String.format("Username %s not found",email)));
     }
 
 
     public void saveAddressAndPhone(AddressAndPhoneDto addressAndPhoneDto, OAuth2User userPrincipal) {
         String email = userPrincipal.getAttribute("email");
-        Account account = this.getUser(email).orElseThrow(() -> new UsernameNotFoundException(String.format("Specified user not found %s", email)));
+        Account account = this.getUser(email);
         account.setAddress(addressAndPhoneDto.address());
         account.setCity(addressAndPhoneDto.city());
         account.setState(addressAndPhoneDto.address());
@@ -77,7 +77,7 @@ public class AccountService {
 
     public AccountDto getProfile(OAuth2User userPrincipal){
         String email = userPrincipal.getAttribute("email");
-        Account account = this.getUser(email).orElseThrow(() -> new UsernameNotFoundException(String.format("Specified user not found %s", email)));
+        Account account = this.getUser(email);
         return AccountDto.builder()
                 .email(account.getEmail())
                 .phone(account.getPhone())
