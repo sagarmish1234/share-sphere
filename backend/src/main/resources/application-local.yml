@@ -6,9 +6,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-
-
-
+  elasticsearch:
+    uris:
+      - http://localhost:9200
+    username: elasticsearch
+    password: password
+    
   security:
     oauth2:
       client:
