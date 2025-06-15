@@ -19,6 +19,14 @@ public class AccountService {
     @Autowired
     private AccountRepository accountRepository;
 
+
+
+    public Account getAccount(OAuth2User userPrincipal) {
+        String email = userPrincipal.getAttribute("email");
+        return this.getUser(email);
+    }
+
+
     public void saveAccount(Account account) {
         accountRepository.save(account);
     }
@@ -66,8 +74,7 @@ public class AccountService {
 
 
     public void saveAddressAndPhone(AddressAndPhoneDto addressAndPhoneDto, OAuth2User userPrincipal) {
-        String email = userPrincipal.getAttribute("email");
-        Account account = this.getUser(email);
+        Account account = this.getAccount(userPrincipal);
         account.setAddress(addressAndPhoneDto.address());
         account.setCity(addressAndPhoneDto.city());
         account.setState(addressAndPhoneDto.address());
@@ -76,8 +83,7 @@ public class AccountService {
     }
 
     public AccountDto getProfile(OAuth2User userPrincipal){
-        String email = userPrincipal.getAttribute("email");
-        Account account = this.getUser(email);
+        Account account = this.getAccount(userPrincipal);
         return AccountDto.builder()
                 .email(account.getEmail())
                 .phone(account.getPhone())
